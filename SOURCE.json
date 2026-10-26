@@ -1,0 +1,36 @@
+{
+  "company": "Лепата — бренд-ателье",
+  "source_json": "outputs/no_site_selected_500.json",
+  "source_index_zero_based": 323,
+  "spreadsheet_row": 325,
+  "verified_on": "2026-10-26",
+  "phone": "+79261993843",
+  "email": null,
+  "email_status": "Not found in checked public sources; no address invented.",
+  "address": "Москва, Волоколамское шоссе, 24 к2",
+  "phone_display": "+7 926 199-38-43",
+  "telegram": "https://t.me/+79261993843",
+  "telegram_channel": "https://t.me/lepata_msk",
+  "own_website_status": "Not found in checked public sources, including search for own domain and clients.site; absence not guaranteed.",
+  "verified_sources": [
+    "https://2gis.ru/moscow/firm/70000001092883218",
+    "https://2gis.ru/moscow/firm/70000001092883218/tab/info",
+    "https://urbanplaces.su/ru_moskva/moskva/metro-streshnevo?page=2",
+    "https://www.urbanplaces.su/ru_moskva/moskva/category-shveinye-atele?page=9",
+    "https://xn--n1alf.xn--24-6kci4amthgkj1f.xn--80asehdb/москва/организация_лепата-бренд-ателье",
+    "https://t.me/%2B79261993843"
+  ],
+  "source_caveat": "2GIS links a Telegram channel via a redirect targeting http://t.me/lepata_msk and direct chat https://t.me/+79261993843. Direct chat page publicly renders the matching phone. Email not found. No review totals, hours, prices or service guarantees published on demo.",
+  "rejected_candidate": {
+    "company": "Клевер",
+    "spreadsheet_row": 29,
+    "reason": "Spravka.City mixes photography-service description and videoklever@yandex.ru with atelier category/address. Email ownership not sufficiently reliable for copy."
+  },
+  "queries": [
+    "Лепата Волоколамское ателье сайт",
+    "lepata_msk",
+    "79261993843 OR 9261993843",
+    "Лепата clients.site",
+    "Лепата Волоколамское почта email"
+  ]
+}
