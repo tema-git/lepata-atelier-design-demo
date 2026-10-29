@@ -2,27 +2,28 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#efefeb"><meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f3efed"><meta name="robots" content="noindex,nofollow">
   <title>Ателье «Лепата» — ваша линия · демо</title>
   <meta name="description" content="Независимая концепция сайта ателье «Лепата»: найдите точный оттенок, проследите путь от лекала к вещи и обсудите свою идею.">
-  <link rel="icon" href="assets/favicon.svg?v=20261029" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=20261029-atelier3">
-  <link rel="stylesheet" href="hero-game.css?v=20261029-atelier3">
-  <link rel="stylesheet" href="atelier-motion.css?v=20261029-atelier3">
-  <link rel="stylesheet" href="second-life.css?v=20261029-atelier3">
+  <link rel="icon" href="assets/favicon.svg?v=20261030-wine2" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=20261030-wine2">
+  <link rel="stylesheet" href="hero-game.css?v=20261030-wine2">
+  <link rel="stylesheet" href="atelier-motion.css?v=20261030-wine2">
+  <link rel="stylesheet" href="second-life.css?v=20261030-wine2">
   <script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="app.js?v=20261029-atelier3" defer></script>
-  <script src="hero-game.js?v=20261029-atelier3" defer></script>
-  <script src="atelier-motion.js?v=20261029-atelier3" defer></script>
-  <script src="second-life.js?v=20261029-atelier3" defer></script>
+  <script src="app.js?v=20261030-wine2" defer></script>
+  <script src="atelier-cursor.js?v=20261030-wine2" defer></script>
+  <script src="hero-game.js?v=20261030-wine2" defer></script>
+  <script src="atelier-motion.js?v=20261030-wine2" defer></script>
+  <script src="second-life.js?v=20261030-wine2" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">К содержимому</a>
   <header class="header wrap">
     <a class="wordmark" href="#" aria-label="Лепата, в начало"><span class="brand-name">ЛЕПАТА<svg class="brand-stroke" viewBox="0 0 200 20" aria-hidden="true"><path d="M3 14C60 3 122 1 193 7"/></svg></span><span class="brand-descriptor">Ателье<br>Москва</span></a>
     <nav id="navigation" aria-label="Главная навигация"><a href="#approach">Подход</a><a href="#hero-color-game">Подбор цвета</a><a href="#second-life">Вторая жизнь</a><a href="#atelier-motion">Как рождается вещь</a></nav>
-    <a class="header-contact" href="#contact">Контакты</a>
+    <a class="header-contact" href="#contact"><span class="contact-magnet-surface">Контакты</span></a>
     <button class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Открыть меню"><span></span><span></span></button>
   </header>
   <main id="main">
@@ -32,11 +33,9 @@
   <div class="hg-heading"><h2 id="hg-title">Попадите в цвет.</h2><p>Повторите оттенок вещи слева.</p></div>
   <div class="hg-pair">
     <figure class="hg-garment hg-target">
-      <figcaption><span>Образец</span><span id="hg-target-name">Рубашка</span></figcaption>
       <div class="hg-stage"><svg class="hg-clothing" id="hg-target-art" viewBox="0 0 240 290" role="img" aria-label="Рубашка с цветом-образцом"><use href="assets/garments.svg#shirt"/></svg><span class="hg-shadow" aria-hidden="true"></span></div>
     </figure>
     <figure class="hg-garment hg-own">
-      <figcaption><span>Ваш оттенок</span><span id="hg-own-name">Пиджак</span></figcaption>
       <div class="hg-stage"><svg class="hg-clothing" id="hg-own-art" viewBox="0 0 240 290" role="img" aria-label="Пиджак: настройте цвет ползунками"><use href="assets/garments.svg#jacket"/></svg><span class="hg-shadow" aria-hidden="true"></span></div>
     </figure>
   </div>
@@ -49,8 +48,7 @@
     </div>
     <div class="hg-actions"><button class="hg-check" type="submit">Проверить <svg class="ui-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h17M13 5l7 7-7 7"/></svg></button><button class="hg-replay" id="hg-replay" type="button" hidden>Сыграть снова <svg class="ui-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h17M13 5l7 7-7 7"/></svg></button></div>
   </form>
-  <div class="hg-feedback" id="hg-feedback" role="status" aria-live="polite" aria-atomic="true"><span class="hg-score" id="hg-score"></span><p id="hg-result">Каждый раунд — новая пара и новый цвет.</p></div>
-  <p class="hg-note">Игровая оценка цвета. Ткань выбирают вживую.</p>
+  <div class="hg-feedback" id="hg-feedback" role="status" aria-live="polite" aria-atomic="true"><span class="hg-score" id="hg-score"></span><p id="hg-result"></p></div>
   <noscript><p class="hg-no-js">Для игры нужен JavaScript. Вы можете связаться с ателье через кнопку «Контакты».</p></noscript>
 </section>
 
@@ -72,10 +70,10 @@
             <div class="uc-compare" aria-label="Сравнение вещи до и после переделки">
               <div class="uc-layer uc-before"><svg class="uc-garment" id="uc-before-art" viewBox="0 0 320 400" role="img" aria-label="Рубашка до переделки"><use href="assets/upcycle.svg#old-shirt"/></svg></div>
               <div class="uc-layer uc-after"><svg class="uc-garment" id="uc-after-art" viewBox="0 0 320 400" role="img" aria-label="Рубашка с новой длиной"><use href="assets/upcycle.svg#shirt-crop"/></svg></div>
-              <span class="uc-divider" aria-hidden="true"></span><span class="uc-label uc-label-before" aria-hidden="true">До</span><span class="uc-label uc-label-after" aria-hidden="true">После</span>
+              <span class="uc-divider" aria-hidden="true"></span><button type="button" class="uc-drag-handle" role="slider" aria-label="Сравнение до и после" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="До: 50%, после: 50%" aria-controls="uc-before-art uc-after-art"><span class="uc-drag-grip" aria-hidden="true"></span></button><span class="uc-label uc-label-before" aria-hidden="true">До</span><span class="uc-label uc-label-after" aria-hidden="true">После</span>
             </div>
             <div class="uc-figcaptions" aria-hidden="true"><span id="uc-before-caption">Рубашка</span><span id="uc-after-caption">Рубашка с новой длиной</span></div>
-            <div class="uc-compare-control"><label for="uc-compare">Сравнить до и после</label><input id="uc-compare" type="range" min="0" max="100" step="1" value="50" aria-controls="uc-before-art uc-after-art" aria-describedby="uc-compare-hint"><p id="uc-compare-hint">Двигайте ползунок, чтобы рассмотреть изменения.</p><div class="uc-view-buttons"><button type="button" id="uc-only-before" aria-pressed="false">Только до</button><button type="button" id="uc-only-after" aria-pressed="false">Только после</button></div></div>
+            <div class="uc-compare-control"><label for="uc-compare">Сравнить до и после</label><input id="uc-compare" type="range" min="0" max="100" step="1" value="50" aria-controls="uc-before-art uc-after-art" aria-describedby="uc-compare-hint"><p id="uc-compare-hint">Двигайте границу на вещи или ползунок.</p></div>
           </div>
           <div class="uc-controls">
             <fieldset><legend>Какой вещи дадим новый шанс?</legend><div class="uc-garment-options"><label><input type="radio" name="uc-garment" value="shirt" checked><span>Рубашка</span></label><label><input type="radio" name="uc-garment" value="jeans"><span>Джинсы</span></label><label><input type="radio" name="uc-garment" value="coat"><span>Пальто</span></label></div></fieldset>
@@ -90,77 +88,77 @@
     </section>
     <section id="atelier-motion" class="atelier-motion" aria-labelledby="atelier-motion-title">
   <div class="wrap">
-    <div class="am-heading"><h2 id="atelier-motion-title">От линии<br>к любимой вещи.</h2><p>Продуманное лекало, точный шов и та самая посадка. У каждой вещи — свой путь.</p></div>
     <div class="am-rail">
       <div class="am-sticky">
+        <div class="am-heading"><h2 id="atelier-motion-title">От линии<br>к любимой вещи.</h2><p>Продуманное лекало, точный шов и та самая посадка. У каждой вещи — свой путь.</p></div>
         <div class="am-stage">
           <span class="am-table-line am-table-line--top" aria-hidden="true"></span>
           <span class="am-table-line am-table-line--bottom" aria-hidden="true"></span>
           <div class="am-scene-label" aria-hidden="true"><span class="am-scene-dot"></span><span>Линия за линией</span></div>
           <div class="am-art motion-parallax">
-            <svg class="am-svg" viewBox="0 0 1000 650" role="img" aria-labelledby="am-svg-title am-svg-description">
+            <svg class="am-svg" viewBox="210 50 580 570" role="img" aria-labelledby="am-svg-title am-svg-description">
               <title id="am-svg-title">Как из деталей лекала получается жакет</title>
-              <desc id="am-svg-description">Два рукава, полочки и воротник соединяются в синий жакет. Появляются швы, карманы и пуговицы.</desc>
+              <desc id="am-svg-description">Два рукава, полочки и воротник соединяются в винный жакет. Появляются швы, карманы и пуговицы.</desc>
               <defs>
-                <linearGradient id="am-cloth" x1="0" x2="1"><stop stop-color="#223aab"/><stop offset=".47" stop-color="#4660cf"/><stop offset="1" stop-color="#304bc4"/></linearGradient>
-                <linearGradient id="am-sleeve-cloth" x1="0" x2="1"><stop stop-color="#243da8"/><stop offset=".6" stop-color="#526cd5"/><stop offset="1" stop-color="#304bc4"/></linearGradient>
-                <pattern id="am-grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#304bc4" stroke-opacity=".09" stroke-width="1"/></pattern>
+                <linearGradient id="am-cloth" x1="0" x2="1"><stop stop-color="#582033"/><stop offset=".47" stop-color="#945068"/><stop offset="1" stop-color="#782f45"/></linearGradient>
+                <linearGradient id="am-sleeve-cloth" x1="0" x2="1"><stop stop-color="#60243b"/><stop offset=".6" stop-color="#a46077"/><stop offset="1" stop-color="#782f45"/></linearGradient>
+                <pattern id="am-grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#782f45" stroke-opacity=".09" stroke-width="1"/></pattern>
                 <pattern id="am-weave" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 1H5M1 0V5" stroke="#ffffff" stroke-opacity=".09" stroke-width=".55"/></pattern>
                 <filter id="am-soft-shadow" x="-40%" y="-30%" width="180%" height="175%"><feGaussianBlur stdDeviation="18"/></filter>
               </defs>
               <rect class="am-drafting-grid" x="35" y="25" width="930" height="600" fill="url(#am-grid)"/>
-              <ellipse class="am-ground-shadow" cx="500" cy="573" rx="203" ry="21" fill="#1c2863" opacity=".15" filter="url(#am-soft-shadow)"/>
-              <g class="am-pattern-notes" fill="none" stroke="#6c78a0" stroke-width="1.2" opacity=".64" aria-hidden="true">
+              <ellipse class="am-ground-shadow" cx="500" cy="573" rx="203" ry="21" fill="#4c1e30" opacity=".15" filter="url(#am-soft-shadow)"/>
+              <g class="am-pattern-notes" fill="none" stroke="#9b7984" stroke-width="1.2" opacity=".64" aria-hidden="true">
                 <path d="M238 152V552M230 152H246M230 552H246M755 153V551M747 153H763M747 551H763"/>
                 <path d="M314 605H684M314 597V613M684 597V613"/>
 
               </g>
-              <g class="am-hanger" fill="none" stroke="#22366f" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+              <g class="am-hanger" fill="none" stroke="#683448" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M500 137V118C500 104 521 105 521 89C521 70 496 68 489 82M500 137L365 189Q352 195 370 197H630Q648 195 635 189Z"/>
               </g>
               <g class="am-assembly" stroke-linejoin="round">
                 <g class="am-part am-sleeve-left" data-am-x="-150" data-am-y="-32" data-am-rotation="-17">
-                  <path class="am-cloth" d="M392 193L343 213Q331 220 324 244L256 430L308 452L379 306L410 247Z" fill="url(#am-sleeve-cloth)" stroke="#253c9a" stroke-width="2"/>
+                  <path class="am-cloth" d="M392 193L343 213Q331 220 324 244L256 430L308 452L379 306L410 247Z" fill="url(#am-sleeve-cloth)" stroke="#542035" stroke-width="2"/>
                   <path class="am-cloth-texture" d="M392 193L343 213Q331 220 324 244L256 430L308 452L379 306L410 247Z" fill="url(#am-weave)"/>
-                  <path class="am-fold" d="M351 250Q353 303 290 421M323 373L310 432" fill="none" stroke="#9faeef" stroke-opacity=".65" stroke-width="2"/>
-                  <path class="am-detail" d="M264 415L315 437M276 434L277 435M285 438L286 439" fill="none" stroke="#b9c5f8" stroke-width="2"/>
+                  <path class="am-fold" d="M351 250Q353 303 290 421M323 373L310 432" fill="none" stroke="#d9aaba" stroke-opacity=".65" stroke-width="2"/>
+                  <path class="am-detail" d="M264 415L315 437M276 434L277 435M285 438L286 439" fill="none" stroke="#eed4dc" stroke-width="2"/>
                 </g>
                 <g class="am-part am-sleeve-right" data-am-x="150" data-am-y="-32" data-am-rotation="17">
-                  <path class="am-cloth" d="M608 193L657 213Q669 220 676 244L744 430L692 452L621 306L590 247Z" fill="url(#am-sleeve-cloth)" stroke="#253c9a" stroke-width="2"/>
+                  <path class="am-cloth" d="M608 193L657 213Q669 220 676 244L744 430L692 452L621 306L590 247Z" fill="url(#am-sleeve-cloth)" stroke="#542035" stroke-width="2"/>
                   <path class="am-cloth-texture" d="M608 193L657 213Q669 220 676 244L744 430L692 452L621 306L590 247Z" fill="url(#am-weave)"/>
-                  <path class="am-fold" d="M649 250Q647 303 710 421M677 373L690 432" fill="none" stroke="#9faeef" stroke-opacity=".65" stroke-width="2"/>
-                  <path class="am-detail" d="M736 415L685 437M724 434L723 435M715 438L714 439" fill="none" stroke="#b9c5f8" stroke-width="2"/>
+                  <path class="am-fold" d="M649 250Q647 303 710 421M677 373L690 432" fill="none" stroke="#d9aaba" stroke-opacity=".65" stroke-width="2"/>
+                  <path class="am-detail" d="M736 415L685 437M724 434L723 435M715 438L714 439" fill="none" stroke="#eed4dc" stroke-width="2"/>
                 </g>
                 <g class="am-part am-front-left" data-am-x="-110" data-am-y="29" data-am-rotation="-10">
-                  <path class="am-cloth" d="M449 161L391 192Q375 220 375 258L395 377L382 546Q435 565 494 555L508 338L500 220Z" fill="url(#am-cloth)" stroke="#253c9a" stroke-width="2"/>
+                  <path class="am-cloth" d="M449 161L391 192Q375 220 375 258L395 377L382 546Q435 565 494 555L508 338L500 220Z" fill="url(#am-cloth)" stroke="#542035" stroke-width="2"/>
                   <path class="am-cloth-texture" d="M449 161L391 192Q375 220 375 258L395 377L382 546Q435 565 494 555L508 338L500 220Z" fill="url(#am-weave)"/>
-                  <path class="am-fold" d="M407 267Q424 318 415 383L404 520M479 343Q455 427 465 535" fill="none" stroke="#93a4ec" stroke-opacity=".5" stroke-width="2"/>
-                  <path class="am-pocket am-detail" d="M406 387L464 392L461 406L405 402ZM412 268L449 275L447 283L411 277Z" fill="#4863d0" stroke="#9caff3" stroke-width="1.4"/>
+                  <path class="am-fold" d="M407 267Q424 318 415 383L404 520M479 343Q455 427 465 535" fill="none" stroke="#c991a5" stroke-opacity=".5" stroke-width="2"/>
+                  <path class="am-pocket am-detail" d="M406 387L464 392L461 406L405 402ZM412 268L449 275L447 283L411 277Z" fill="#9c5b72" stroke="#e2b2c1" stroke-width="1.4"/>
                 </g>
                 <g class="am-part am-front-right" data-am-x="110" data-am-y="29" data-am-rotation="10">
-                  <path class="am-cloth" d="M551 161L609 192Q625 220 625 258L605 377L618 546Q565 565 506 555L492 338L500 220Z" fill="url(#am-cloth)" stroke="#253c9a" stroke-width="2"/>
+                  <path class="am-cloth" d="M551 161L609 192Q625 220 625 258L605 377L618 546Q565 565 506 555L492 338L500 220Z" fill="url(#am-cloth)" stroke="#542035" stroke-width="2"/>
                   <path class="am-cloth-texture" d="M551 161L609 192Q625 220 625 258L605 377L618 546Q565 565 506 555L492 338L500 220Z" fill="url(#am-weave)"/>
-                  <path class="am-fold" d="M593 267Q576 318 585 383L596 520M521 343Q545 427 535 535" fill="none" stroke="#93a4ec" stroke-opacity=".5" stroke-width="2"/>
-                  <path class="am-pocket am-detail" d="M594 387L536 392L539 406L595 402Z" fill="#4863d0" stroke="#9caff3" stroke-width="1.4"/>
+                  <path class="am-fold" d="M593 267Q576 318 585 383L596 520M521 343Q545 427 535 535" fill="none" stroke="#c991a5" stroke-opacity=".5" stroke-width="2"/>
+                  <path class="am-pocket am-detail" d="M594 387L536 392L539 406L595 402Z" fill="#9c5b72" stroke="#e2b2c1" stroke-width="1.4"/>
                 </g>
                 <g class="am-part am-collar" data-am-x="0" data-am-y="-100" data-am-rotation="0">
-                  <path class="am-lining" d="M449 161Q500 179 551 161L531 222L500 257L469 222Z" fill="#bcc8f0" stroke="#7589d0" stroke-width="1.5"/>
-                  <path class="am-cloth" d="M449 161L420 190L450 237L438 250L496 339L488 252L468 203Z" fill="#5671d9" stroke="#263f9e" stroke-width="1.8"/>
-                  <path class="am-cloth" d="M551 161L580 190L550 237L562 250L504 339L512 252L532 203Z" fill="#4661cd" stroke="#263f9e" stroke-width="1.8"/>
-                  <path class="am-detail" d="M451 171L470 207L491 256M548 171L529 207L509 256" fill="none" stroke="#b2c2fa" stroke-opacity=".8" stroke-width="1.2"/>
+                  <path class="am-lining" d="M449 161Q500 179 551 161L531 222L500 257L469 222Z" fill="#ead4dc" stroke="#ac7085" stroke-width="1.5"/>
+                  <path class="am-cloth" d="M449 161L420 190L450 237L438 250L496 339L488 252L468 203Z" fill="#aa6b81" stroke="#60243b" stroke-width="1.8"/>
+                  <path class="am-cloth" d="M551 161L580 190L550 237L562 250L504 339L512 252L532 203Z" fill="#945068" stroke="#60243b" stroke-width="1.8"/>
+                  <path class="am-detail" d="M451 171L470 207L491 256M548 171L529 207L509 256" fill="none" stroke="#eed1dc" stroke-opacity=".8" stroke-width="1.2"/>
                 </g>
-                <g class="am-finish-details" fill="none" stroke="#b9c8fa" stroke-width="1.7">
+                <g class="am-finish-details" fill="none" stroke="#efd2db" stroke-width="1.7">
                   <path class="am-seam" d="M390 222Q385 278 403 370L392 535Q437 551 483 546"/>
                   <path class="am-seam" d="M610 222Q615 278 597 370L608 535Q563 551 517 546"/>
                   <path class="am-seam" d="M347 233L271 425M653 233L729 425"/>
                   <path class="am-seam" d="M503 342L507 539"/>
-                  <circle class="am-button" cx="497" cy="363" r="5.5" fill="#182867" stroke="#becaf4"/>
-                  <circle class="am-button" cx="498" cy="417" r="5.5" fill="#182867" stroke="#becaf4"/>
-                  <path class="am-button" d="M513 363H524M514 417H525" stroke="#192a72" stroke-width="2.4"/>
+                  <circle class="am-button" cx="497" cy="363" r="5.5" fill="#441c2b" stroke="#dfb2c0"/>
+                  <circle class="am-button" cx="498" cy="417" r="5.5" fill="#441c2b" stroke="#dfb2c0"/>
+                  <path class="am-button" d="M513 363H524M514 417H525" stroke="#4b1d30" stroke-width="2.4"/>
                 </g>
               </g>
               <path class="am-travel-thread" d="M291 325C349 204 379 184 423 236S486 332 500 389S571 458 600 371S651 253 710 324" fill="none" stroke="#a1676b" stroke-width="2" opacity="0"/>
-              <g class="am-needle" fill="none" stroke="#172758" stroke-linecap="round" opacity="0" aria-hidden="true"><path d="M-31 0H25Q34 0 34 3Q34 6 25 6H-31Z" fill="#e9edf7" stroke-width="1.4"/><path d="M20 3H28" stroke-width="1.1"/></g>
+              <g class="am-needle" fill="none" stroke="#512134" stroke-linecap="round" opacity="0" aria-hidden="true"><path d="M-31 0H25Q34 0 34 3Q34 6 25 6H-31Z" fill="#f7e9ec" stroke-width="1.4"/><path d="M20 3H28" stroke-width="1.1"/></g>
             </svg>
           </div>
           <div class="am-stage-caption" aria-hidden="true"><span>Из замысла — в гардероб</span><span class="am-progress-track"><span class="am-progress-fill"></span></span></div>

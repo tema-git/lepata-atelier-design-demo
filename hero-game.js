@@ -59,10 +59,9 @@
     return Math.max(0, Math.min(100, Math.round(100 * Math.exp(-difference / 45))));
   }
 
-  function setArt(svg, captionSelector, garment, suffix) {
+  function setArt(svg, garment, suffix) {
     svg.querySelector('use').setAttribute('href', `assets/garments.svg#${garment.id}`);
     svg.setAttribute('aria-label', `${garment.name}: ${suffix}`);
-    root.querySelector(captionSelector).textContent = garment.name;
   }
 
   function paint() {
@@ -97,11 +96,11 @@
     if (distance(target, initial) < 22) initial[2] = target[2] > 50 ? 25 : 78;
     sliders.forEach((slider, index) => { slider.value = initial[index]; });
     root.style.setProperty('--hg-target', hsl(target));
-    setArt(targetArt, '#hg-target-name', first, 'цвет, который нужно повторить');
-    setArt(ownArt, '#hg-own-name', second, 'настройте оттенок ползунками ниже');
+    setArt(targetArt, first, 'цвет, который нужно повторить');
+    setArt(ownArt, second, 'настройте оттенок ползунками ниже');
     checked = false;
     scoreOutput.textContent = '';
-    result.textContent = 'Каждый раунд — новая пара и новый цвет.';
+    result.textContent = '';
     replay.hidden = true;
     paint();
     if (moveFocus) sliders[0].focus({ preventScroll: true });

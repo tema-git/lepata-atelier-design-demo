@@ -6,6 +6,8 @@
   gsap.registerPlugin(ScrollTrigger);
   const rail = scene.querySelector('.am-rail');
   const sticky = scene.querySelector('.am-sticky');
+  const svg = scene.querySelector('.am-svg');
+  const header = document.querySelector('.header');
   const parts = [...scene.querySelectorAll('.am-part')];
   const seams = [...scene.querySelectorAll('.am-seam')];
   const steps = [...scene.querySelectorAll('.am-step')];
@@ -13,11 +15,23 @@
   const travel = scene.querySelector('.am-travel-thread');
   const progressFill = scene.querySelector('.am-progress-fill');
   const media = gsap.matchMedia();
+  const measureHeader = () => {
+    const height = Math.ceil(header?.getBoundingClientRect().height || 0);
+    if (!height || scene.style.getPropertyValue('--am-header-height') === `${height}px`) return false;
+    scene.style.setProperty('--am-header-height', `${height}px`);
+    return true;
+  };
+  measureHeader();
+  const headerObserver = window.ResizeObserver && header ? new ResizeObserver(() => {
+    if (measureHeader()) ScrollTrigger.refresh();
+  }) : null;
+  headerObserver?.observe(header);
 
   media.add('(prefers-reduced-motion: no-preference)', () => {
     // The unenhanced document shows the complete garment. Only enable the
     // longer sticky rail once a matching GSAP context is ready to animate it.
     scene.classList.add('am-enhanced');
+    const accent = getComputedStyle(scene).getPropertyValue('--accent').trim() || '#782f45';
     const length = travel.getTotalLength();
     const seamLengths = seams.map(path => path.getTotalLength());
     const states = parts.map(part => ({
@@ -41,9 +55,10 @@
     };
 
     parts.forEach((part, index) => gsap.set(part, states[index]));
-    gsap.set(scene.querySelectorAll('.am-cloth'), { fill: '#dde1d7', stroke: '#75856f' });
+    gsap.set(svg, { attr: { viewBox: '0 -50 1000 750' } });
+    gsap.set(scene.querySelectorAll('.am-cloth'), { fill: '#ede4e6', stroke: '#a9828e' });
     gsap.set(scene.querySelectorAll('.am-cloth-texture, .am-detail, .am-fold, .am-finish-details, .am-hanger'), { autoAlpha: 0 });
-    gsap.set(scene.querySelector('.am-lining'), { fill: '#e9eadd' });
+    gsap.set(scene.querySelector('.am-lining'), { fill: '#f1e6e9' });
     gsap.set(scene.querySelector('.am-ground-shadow'), { opacity: .04, scaleX: .7, transformOrigin: 'center' });
     gsap.set(progressFill, { scaleX: 0 });
     seams.forEach((seam, index) => gsap.set(seam, { strokeDasharray: seamLengths[index], strokeDashoffset: seamLengths[index] }));
@@ -62,8 +77,9 @@
     });
     timeline.to(scene.querySelectorAll('.am-pattern-notes'), { opacity: .15, duration: .22 }, 0);
     timeline.to(parts, { x: 0, y: 0, rotation: 0, duration: .42, stagger: .025, ease: 'power1.inOut' }, .08);
-    timeline.to(scene.querySelectorAll('.am-cloth'), { fill: '#304bc4', stroke: '#253c9a', duration: .25 }, .25);
-    timeline.to(scene.querySelector('.am-lining'), { fill: '#bcc8f0', duration: .2 }, .35);
+    timeline.to(scene.querySelectorAll('.am-cloth'), { fill: accent, stroke: '#582033', duration: .25 }, .25);
+    timeline.to(svg, { attr: { viewBox: '210 50 580 570' }, duration: .4, ease: 'power1.inOut' }, .3);
+    timeline.to(scene.querySelector('.am-lining'), { fill: '#dac1ca', duration: .2 }, .35);
     timeline.to(scene.querySelectorAll('.am-fold, .am-cloth-texture'), { autoAlpha: 1, duration: .22 }, .38);
     timeline.to(scene.querySelectorAll('.am-finish-details'), { autoAlpha: 1, duration: .01 }, .43);
     timeline.to(travel, { opacity: .85, strokeDashoffset: 0, duration: .34 }, .42);
@@ -91,5 +107,7 @@
   if (document.fonts) document.fonts.ready.then(refresh);
   window.addEventListener('load', refresh, { once: true });
   // pagehide with bfcache is not an unmount: the same document may return.
-  window.addEventListener('pagehide', event => { if (!event.persisted) media.revert(); }, { once: true });
+  window.addEventListener('pagehide', event => {
+    if (!event.persisted) { media.revert(); headerObserver?.disconnect(); }
+  }, { once: true });
 })();

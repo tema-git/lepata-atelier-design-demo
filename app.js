@@ -22,13 +22,11 @@
     ideaPanel.hidden = false;
     success.hidden = true; form.hidden = false;
     name.setCustomValidity(''); phone.setCustomValidity('');
-    refresh();
     document.querySelector('#appointment').scrollIntoView({block: 'start', behavior: reduce.matches ? 'instant' : 'smooth'});
     name.focus({preventScroll: true});
   });
   document.addEventListener('atelier:clear-idea', () => {
     ideaPanel.textContent = ''; ideaPanel.hidden = true;
-    refresh();
   });
   const validateName = () => name.setCustomValidity(name.value.trim().length >= 2 ? '' : 'Введите имя: не менее двух символов.');
   const validatePhone = () => {
@@ -51,7 +49,6 @@
     form.hidden = true; success.hidden = false;
     success.focus({preventScroll: true});
     success.scrollIntoView({block: 'nearest', behavior: 'instant'});
-    refresh();
   });
   form.querySelector('[type="submit"]').disabled = false;
   document.querySelector('#appointment-reset').addEventListener('click', () => {
@@ -59,7 +56,6 @@
     name.setCustomValidity(''); phone.setCustomValidity('');
     name.focus({preventScroll: true});
     name.scrollIntoView({block: 'nearest', behavior: 'instant'});
-    refresh();
   });
 
   const toggle = document.querySelector('.menu-toggle');

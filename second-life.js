@@ -25,23 +25,46 @@
   const afterArt = root.querySelector('#uc-after-art');
   const slider = root.querySelector('#uc-compare');
   const compare = root.querySelector('.uc-compare');
-  const beforeButton = root.querySelector('#uc-only-before');
-  const afterButton = root.querySelector('#uc-only-after');
+  const dragHandle = root.querySelector('.uc-drag-handle');
   const resultTitle = root.querySelector('#uc-result-title');
   const resultCopy = root.querySelector('#uc-result-copy');
   let garment = 'shirt', routeIndex = 0;
+  let drag = null;
+
+  const clamp = amount => Math.max(0, Math.min(100, Math.round(amount)));
+
+  function stopDrag() {
+    if (!drag) return;
+    const pointerId = drag.pointerId;
+    drag = null;
+    compare.classList.remove('is-dragging');
+    if (dragHandle?.hasPointerCapture?.(pointerId)) dragHandle.releasePointerCapture(pointerId);
+  }
+
+  // Selection updates remain local. Refreshing the page-wide pinned timeline
+  // here used to restore its scroll position and could jump to the page top.
+  function updateInPlace(update) {
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    update();
+    if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
+      window.scrollTo({left: scrollX, top: scrollY, behavior: 'instant'});
+    }
+  }
 
   function paintComparison() {
-    const amount = Number(slider.value);
+    const amount = clamp(Number(slider.value));
+    slider.value = String(amount);
     compare.style.setProperty('--uc-split', `${amount}%`);
     compare.classList.toggle('uc-show-before', amount === 100);
     compare.classList.toggle('uc-show-after', amount === 0);
     slider.setAttribute('aria-valuetext', `До: ${amount}%, после: ${100 - amount}%`);
-    beforeButton.setAttribute('aria-pressed', String(amount === 100));
-    afterButton.setAttribute('aria-pressed', String(amount === 0));
+    dragHandle?.setAttribute('aria-valuenow', String(amount));
+    dragHandle?.setAttribute('aria-valuetext', `До: ${amount}%, после: ${100 - amount}%`);
   }
 
   function render(resetComparison = true) {
+    stopDrag();
     const selected = garments[garment], route = selected.routes[routeIndex];
     radios.forEach(input => { input.checked = input.value === garment; });
     beforeArt.querySelector('use').setAttribute('href', `assets/upcycle.svg#${selected.before}`);
@@ -59,27 +82,72 @@
     resultCopy.textContent = route.copy;
     if (resetComparison) slider.value = 50;
     paintComparison();
-    window.ScrollTrigger?.refresh();
   }
 
   radios.forEach(input => input.addEventListener('change', () => {
     if (!input.checked) return;
-    garment = input.value; routeIndex = 0; render();
+    updateInPlace(() => { garment = input.value; routeIndex = 0; render(); });
   }));
   routeButtons.forEach((button, index) => button.addEventListener('click', () => {
-    routeIndex = index; render();
+    updateInPlace(() => { routeIndex = index; render(); });
   }));
-  slider.addEventListener('input', paintComparison);
-  beforeButton.addEventListener('click', () => { slider.value = 100; paintComparison(); });
-  afterButton.addEventListener('click', () => { slider.value = 0; paintComparison(); });
+  slider.addEventListener('input', () => { stopDrag(); paintComparison(); });
+
+  if (dragHandle) {
+    dragHandle.setAttribute('aria-orientation', 'horizontal');
+    dragHandle.setAttribute('aria-describedby', 'uc-compare-hint');
+    dragHandle.addEventListener('pointerdown', event => {
+      if (event.isPrimary === false || event.button !== 0 || drag) return;
+      const bounds = compare.getBoundingClientRect();
+      if (bounds.width <= 0) return;
+      if (event.pointerType !== 'touch') event.preventDefault();
+      dragHandle.focus({preventScroll: true});
+      drag = {pointerId: event.pointerId, startX: event.clientX, startAmount: Number(slider.value), width: bounds.width};
+      dragHandle.setPointerCapture(event.pointerId);
+      compare.classList.add('is-dragging');
+    });
+    dragHandle.addEventListener('pointermove', event => {
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      // Captured geometry keeps the line stable when grabbed off-centre.
+      slider.value = String(clamp(drag.startAmount + (event.clientX - drag.startX) / drag.width * 100));
+      paintComparison();
+    });
+    const finishPointer = event => {
+      if (drag && event.pointerId === drag.pointerId) stopDrag();
+    };
+    dragHandle.addEventListener('pointerup', finishPointer);
+    dragHandle.addEventListener('pointercancel', finishPointer);
+    dragHandle.addEventListener('lostpointercapture', finishPointer);
+    window.addEventListener('blur', stopDrag);
+    window.addEventListener('pagehide', stopDrag);
+    window.addEventListener('resize', stopDrag);
+    dragHandle.addEventListener('keydown', event => {
+      const step = event.shiftKey ? 10 : 1;
+      const amount = Number(slider.value);
+      const next = {
+        ArrowLeft: amount - step, ArrowDown: amount - step,
+        ArrowRight: amount + step, ArrowUp: amount + step,
+        PageDown: amount - 10, PageUp: amount + 10,
+        Home: 0, End: 100
+      }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      event.stopPropagation();
+      stopDrag();
+      slider.value = String(clamp(next));
+      paintComparison();
+    });
+  }
   root.querySelector('#uc-discuss').addEventListener('click', () => {
     const selected = garments[garment], route = selected.routes[routeIndex];
     document.dispatchEvent(new CustomEvent('atelier:idea', {detail: `${selected.name}: ${route.label.toLowerCase()}. Идея — «${route.title}».`}));
   });
   root.querySelector('#uc-reset').addEventListener('click', () => {
-    garment = 'shirt'; routeIndex = 0; render();
-    document.dispatchEvent(new CustomEvent('atelier:clear-idea'));
-    radios[0].focus({preventScroll: true});
+    updateInPlace(() => {
+      garment = 'shirt'; routeIndex = 0; render();
+      document.dispatchEvent(new CustomEvent('atelier:clear-idea'));
+      radios[0].focus({preventScroll: true});
+    });
   });
   render();
 })();
