@@ -6,20 +6,22 @@
   <title>Ателье «Лепата» — ваша линия · демо</title>
   <meta name="description" content="Независимая концепция сайта ателье «Лепата»: найдите точный оттенок, проследите путь от лекала к вещи и обсудите свою идею.">
   <link rel="icon" href="assets/favicon.svg?v=20261029" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=20261029-atelier2">
-  <link rel="stylesheet" href="hero-game.css?v=20261029-atelier2">
-  <link rel="stylesheet" href="atelier-motion.css?v=20261029-atelier2">
+  <link rel="stylesheet" href="style.css?v=20261029-atelier3">
+  <link rel="stylesheet" href="hero-game.css?v=20261029-atelier3">
+  <link rel="stylesheet" href="atelier-motion.css?v=20261029-atelier3">
+  <link rel="stylesheet" href="second-life.css?v=20261029-atelier3">
   <script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
-  <script src="app.js?v=20261029-atelier2" defer></script>
-  <script src="hero-game.js?v=20261029-atelier2" defer></script>
-  <script src="atelier-motion.js?v=20261029-atelier2" defer></script>
+  <script src="app.js?v=20261029-atelier3" defer></script>
+  <script src="hero-game.js?v=20261029-atelier3" defer></script>
+  <script src="atelier-motion.js?v=20261029-atelier3" defer></script>
+  <script src="second-life.js?v=20261029-atelier3" defer></script>
 </head>
 <body>
   <a class="skip" href="#main">К содержимому</a>
   <header class="header wrap">
     <a class="wordmark" href="#" aria-label="Лепата, в начало"><span class="brand-name">ЛЕПАТА<svg class="brand-stroke" viewBox="0 0 200 20" aria-hidden="true"><path d="M3 14C60 3 122 1 193 7"/></svg></span><span class="brand-descriptor">Ателье<br>Москва</span></a>
-    <nav id="navigation" aria-label="Главная навигация"><a href="#approach">Подход</a><a href="#hero-color-game">Подбор цвета</a><a href="#atelier-motion">Как рождается вещь</a></nav>
+    <nav id="navigation" aria-label="Главная навигация"><a href="#approach">Подход</a><a href="#hero-color-game">Подбор цвета</a><a href="#second-life">Вторая жизнь</a><a href="#atelier-motion">Как рождается вещь</a></nav>
     <a class="header-contact" href="#contact">Контакты</a>
     <button class="menu-toggle" aria-controls="navigation" aria-expanded="false" aria-label="Открыть меню"><span></span><span></span></button>
   </header>
@@ -60,6 +62,30 @@
         <article data-pointer-surface><span class="principle-art line-art" aria-hidden="true"></span><div><h3>Силуэт</h3><p>Свобода, чёткость или мягкость. Сначала выбираем характер будущей вещи.</p></div></article>
         <article data-pointer-surface><span class="principle-art fold-art" aria-hidden="true"></span><div><h3>Материал</h3><p>Ткань меняет всё: как ложится складка, движется и ощущается одежда.</p></div></article>
         <article data-pointer-surface><span class="principle-art detail-art" aria-hidden="true"></span><div><h3>Деталь</h3><p>Воротник, линия рукава, длина. Именно нюансы делают вещь вашей.</p></div></article>
+      </div>
+    </section>
+    <section id="second-life" class="second-life" aria-labelledby="uc-title" data-pointer-surface>
+      <div class="wrap">
+        <div class="uc-heading"><h2 id="uc-title">Вторая жизнь<br>любимой вещи.</h2><p>Знакомая вещь может измениться. Выберите переделку и посмотрите, какой она станет.</p></div>
+        <div class="uc-layout">
+          <div class="uc-visual">
+            <div class="uc-compare" aria-label="Сравнение вещи до и после переделки">
+              <div class="uc-layer uc-before"><svg class="uc-garment" id="uc-before-art" viewBox="0 0 320 400" role="img" aria-label="Рубашка до переделки"><use href="assets/upcycle.svg#old-shirt"/></svg></div>
+              <div class="uc-layer uc-after"><svg class="uc-garment" id="uc-after-art" viewBox="0 0 320 400" role="img" aria-label="Рубашка с новой длиной"><use href="assets/upcycle.svg#shirt-crop"/></svg></div>
+              <span class="uc-divider" aria-hidden="true"></span><span class="uc-label uc-label-before" aria-hidden="true">До</span><span class="uc-label uc-label-after" aria-hidden="true">После</span>
+            </div>
+            <div class="uc-figcaptions" aria-hidden="true"><span id="uc-before-caption">Рубашка</span><span id="uc-after-caption">Рубашка с новой длиной</span></div>
+            <div class="uc-compare-control"><label for="uc-compare">Сравнить до и после</label><input id="uc-compare" type="range" min="0" max="100" step="1" value="50" aria-controls="uc-before-art uc-after-art" aria-describedby="uc-compare-hint"><p id="uc-compare-hint">Двигайте ползунок, чтобы рассмотреть изменения.</p><div class="uc-view-buttons"><button type="button" id="uc-only-before" aria-pressed="false">Только до</button><button type="button" id="uc-only-after" aria-pressed="false">Только после</button></div></div>
+          </div>
+          <div class="uc-controls">
+            <fieldset><legend>Какой вещи дадим новый шанс?</legend><div class="uc-garment-options"><label><input type="radio" name="uc-garment" value="shirt" checked><span>Рубашка</span></label><label><input type="radio" name="uc-garment" value="jeans"><span>Джинсы</span></label><label><input type="radio" name="uc-garment" value="coat"><span>Пальто</span></label></div></fieldset>
+            <fieldset><legend>Выберите переделку</legend><div class="uc-routes"><button type="button" data-uc-route="0" aria-pressed="true"><span class="uc-route-title">Укоротить силуэт</span><span class="uc-route-detail">Более короткая длина, прежний характер.</span></button><button type="button" data-uc-route="1" aria-pressed="false"><span class="uc-route-title">Убрать рукава</span><span class="uc-route-detail">Лёгкий жилет для многослойных образов.</span></button><button type="button" data-uc-route="2" aria-pressed="false"><span class="uc-route-title">Выделить талию</span><span class="uc-route-detail">Мягкая сборка и пояс из ткани.</span></button></div></fieldset>
+            <div class="uc-result" role="status" aria-live="polite" aria-atomic="true"><h3 id="uc-result-title">Рубашка с новой длиной</h3><p id="uc-result-copy">Укороченный низ меняет пропорции. Рукава и воротник сохраняют знакомый характер вещи.</p></div>
+            <div class="uc-actions"><button class="button" id="uc-discuss" type="button">Обсудить переделку <svg class="ui-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h17M13 5l7 7-7 7"/></svg></button><button class="uc-reset" id="uc-reset" type="button">Начать заново</button></div>
+          </div>
+        </div>
+        <p class="uc-note">Это идеи переделки, а не готовые изделия ателье. Что получится с вашей вещью, зависит от материала, состояния и запаса ткани — детали обсудите с мастером.</p>
+        <noscript><p class="uc-note">Для выбора вариантов нужен JavaScript. Обсудить свою вещь можно по телефону или в Telegram в разделе «Контакты».</p></noscript>
       </div>
     </section>
     <section id="atelier-motion" class="atelier-motion" aria-labelledby="atelier-motion-title">
@@ -151,7 +177,7 @@
 
     <section id="contact" class="contact section wrap" aria-labelledby="contact-title">
       <div class="contact-intro"><p class="section-note">Всё начинается с разговора</p><h2 id="contact-title">Ваша идея.<br>Наша встреча.</h2><p class="contact-description">Выберите запись в ателье или обратный звонок. В этой демоверсии можно попробовать форму без отправки данных.</p><a class="large-phone" href="tel:+79261993843">+7 926 199-38-43</a><div class="contact-links"><a class="action-link" href="tel:+79261993843">Позвонить в ателье <svg class="ui-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h17M13 5l7 7-7 7"/></svg></a><a class="action-link" href="https://t.me/+79261993843" target="_blank" rel="noopener noreferrer">Написать в Telegram <svg class="ui-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h17M13 5l7 7-7 7"/></svg></a></div><p class="contact-email"><a href="https://t.me/lepata_msk" target="_blank" rel="noopener noreferrer">Канал ателье · @lepata_msk</a></p><aside class="address-card"><h3>Москва</h3><p>Волоколамское шоссе,<br>24, корпус 2</p><p class="appointment-note">Перед визитом уточните время работы и возможность встречи по телефону.</p><a class="text-link" href="https://yandex.ru/maps/?text=%D0%9B%D0%B5%D0%BF%D0%B0%D1%82%D0%B0%2C%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D0%92%D0%BE%D0%BB%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%BC%D1%81%D0%BA%D0%BE%D0%B5%20%D1%88%D0%BE%D1%81%D1%81%D0%B5%2C%2024%D0%BA2" target="_blank" rel="noopener noreferrer">Открыть маршрут <svg class="ui-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h17M13 5l7 7-7 7"/></svg></a></aside><svg class="contact-thread" viewBox="0 0 500 160" aria-hidden="true"><path d="M0 120 C100 120 125 15 230 45 S360 160 500 35"/><circle cx="230" cy="45" r="8"/></svg></div>
-      <div class="appointment-panel" id="appointment"><h3>Запись в ателье</h3><a class="appointment-phone" href="tel:+79261993843">+7 926 199-38-43</a><p class="demo-notice" id="appointment-notice">Демо: данные не отправляются, реальная запись не создаётся.</p>
+      <div class="appointment-panel" id="appointment"><h3>Запись в ателье</h3><p class="appointment-idea" id="appointment-idea" hidden></p><a class="appointment-phone" href="tel:+79261993843">+7 926 199-38-43</a><p class="demo-notice" id="appointment-notice">Демо: данные не отправляются, реальная запись не создаётся.</p>
         <form id="appointment-form" aria-describedby="appointment-notice" autocomplete="off">
           <fieldset><legend>Как удобнее начать?</legend><div class="request-types"><label><input type="radio" name="request" value="meeting" checked><span>Запись в ателье</span></label><label><input type="radio" name="request" value="callback"><span>Обратный звонок</span></label></div></fieldset>
           <label class="field-label" for="appointment-name">Ваше имя</label><input id="appointment-name" name="name" type="text" required minlength="2" maxlength="60" placeholder="Как к вам обращаться" autocomplete="off">

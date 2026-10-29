@@ -15,6 +15,21 @@
   const phone = form.elements.phone;
   const success = document.querySelector('#appointment-success');
   form.noValidate = true;
+  const ideaPanel = document.querySelector('#appointment-idea');
+  document.addEventListener('atelier:idea', event => {
+    if (typeof event.detail !== 'string') return;
+    ideaPanel.textContent = `Ваша идея: ${event.detail}`;
+    ideaPanel.hidden = false;
+    success.hidden = true; form.hidden = false;
+    name.setCustomValidity(''); phone.setCustomValidity('');
+    refresh();
+    document.querySelector('#appointment').scrollIntoView({block: 'start', behavior: reduce.matches ? 'instant' : 'smooth'});
+    name.focus({preventScroll: true});
+  });
+  document.addEventListener('atelier:clear-idea', () => {
+    ideaPanel.textContent = ''; ideaPanel.hidden = true;
+    refresh();
+  });
   const validateName = () => name.setCustomValidity(name.value.trim().length >= 2 ? '' : 'Введите имя: не менее двух символов.');
   const validatePhone = () => {
     const value = phone.value.trim();
