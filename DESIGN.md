@@ -1,57 +1,38 @@
-# ЛЕПАТА — a personal wardrobe, before the first appointment
+# Лепата — форма, цвет и точный шов
 
-Separate brand copy: 26 October 2026. The existing design and interactions are reused without redesign. This is an independent concept, not official identity or an actual garment catalogue. The purpose is to help a visitor find a direction and talk to the atelier.
+Версия 29.10.2026, правки по скриншотам пользователя. Сохранены бумага, ультрамарин, Prata/Golos и крупный словесный знак; декоративная фотография заменена работающей игрой.
 
-## References and adaptations
+## Визуальная система
 
-- https://styles.refero.design/style/cdc4a162-cefa-49a1-81e7-4857e421ae24 — Adam Lippes: generous image proportions, editorial fashion hierarchy and paper surfaces. Here the existing ultramarine and Cyrillic Prata/Golos stay, with 18px body and 16px controls instead of small monochrome navigation.
-- https://21st.dev/@ibelick/components/spotlight — bounded light over a fixed frame. Public description and usage inspected; the actual component source requires an account. The implementation is original vanilla JS; no React dependency or copied source.
-- https://motionsites.ai/lesson/cursor-tracking-website-with-motionsites — pointer movement controls a bounded visual response. Here the cropped photo and its decorative label respond; buttons and text do not move. Public material was consulted, not a paid prompt archive.
-- Existing Diamond Cup in this project: the user's accepted reference for a subject-focused photographic hero with layered depth. This separate copy retains the atelier paper/ultramarine visual direction.
+Бумага #efefeb, текст #202221, ультрамарин #304bc4, вторичный текст #61655f, линия #c6c9c1, рабочая поверхность #e4e7e0. Основной текст 18px, поля и действия от16px, вторичные подписи от14px. Максимальная ширина1380px, мобильные отступы20px. Блок о подходе ограничен1120px и не имеет пустой боковой колонки.
 
-Reference reading does not imply live behavior testing. Main browser QA is coordinated by the parent task.
+## Источники и адаптация
 
-## Visual system
+- https://styles.refero.design/style/cdc4a162-cefa-49a1-81e7-4857e421ae24 — Adam Lippes: композиция модного ателье, крупная типографика и тонкие структурные линии. Здесь сохранена собственная ультрамариновая система и более крупные элементы управления.
+- https://21st.dev/@ibelick/components/spotlight — открытое описание света, следующего за курсором. Источник компонента требует аккаунта; реализован собственный vanillaJS-эквивалент без новых зависимостей.
+- https://motionsites.ai/lesson/cursor-tracking-website-with-motionsites — визуальный отклик на положение указателя. Применён к собственной SVG-одежде и рабочему столу; чужой видеоролик и код не использованы.
+- https://gsap.com/docs/v3/Plugins/ScrollTrigger/ и https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/ — обратимая сцена сборки и переключение reduced motion. GSAP и ScrollTrigger загружаются локально.
 
-Paper #efefeb; ink #202221; ultramarine #304bc4; quiet text #61655f; rules #c6c9c1; light studio surface #e5e7df. Prata for display typography and large ЛЕПАТА wordmark, Golos Text for body and controls. Existing max width1380px and mobile side gaps20px. The original large wordmark replaces a tiny emblem; its curved underline is a quiet signature. It is not presented as the company's official identity.
+Чтение референса не приравнивается к проверке его интерактивного поведения.
 
-## Final interaction map
+## Взаимодействие
 
-| Area | Input → response | Touch/keyboard/reduced motion |
-| --- | --- | --- |
-| Hero | Pointer moves a cropped photograph at most12px/10px and0.6°, with a1.14 crop reserve; light and decorative label respond | Native image drag disabled. No fake fabric button or instructions. Reduced motion removes transforms. |
-| Approach | Pointer bends the connecting thread and moves the three motif drawings | Stable copy; reduced motion is static. |
-| Your wardrobe | Choose a complete dress/jacket/skirt illustration, colour and occasion; summary changes; CTA carries it into the enquiry block | Native radios and select; whole click targets stable. Cards' inner drawings respond to pointer. There is no drawing editor, SVG download or separately placed garment detail. |
-| Colour studio | Match a reference sample using hue/saturation/lightness. Compare → numerical feedback and directional hints. Three rounds → completion and replay | Native range inputs and buttons; touch and keyboard supported. Optional hint adjusts one parameter for people who cannot distinguish the tones. Target colours are never altered. Background fold highlights alone follow pointer. |
-| Contacts/footer | Thread/border response; actual phone/Telegram and honest demo form | Sticky Contacts remains visible; no personal-data persistence or real submissions. |
+| Блок | Действие и результат | Доступность и ограничения |
+|---|---|---|
+| Первый экран | Указатель меняет локальный свет, декоративную нить и смещает вещи до7px/5px | Кнопки и ползунки неподвижны; touch использует native range; reduced motion убирает движение |
+| Игра цвета | Выбрать H/S/L, нажать «Проверить», увидеть точность, сыграть новую пару | Девять оригинальных SVG: рубашка, брюки, платье, майка, юбка, шарф, пальто, шуба, пиджак. Пары различны и не повторяются подряд. Это игровая оценка на основе расстояния CIELAB, не калибровка ткани |
+| Подход | Нить изгибается, три тематических рисунка реагируют на курсор; нить прорисовывается скроллом | Текст доступен для выделения, фон выделения прозрачен |
+| От лекала к вещи | Скролл управляет сборкой пяти деталей жакета, цветом, швами и иглой | Native scroll без перехвата. Отдельные вложенные слои для cursor и scroll. Без GSAP/reduced motion — готовый жакет и все подписи |
+| Контакты | Нить и подсветка формы реагируют на курсор; реальный телефон/Telegram и демоформа | Нет сетевой отправки или хранения персональных данных; валидация, успех, очистка, повтор |
 
-## QA path
+Один конечный RAF обслуживает курсорные поверхности; останавливается после стабилизации, при уходе за экран, скрытии страницы и reduced motion. Высота шапки измеряется ResizeObserver; якоря учитывают её размер. Все стрелки действий SVG: вверх-вправо в покое, вправо при hover/focus.
 
-Wardrobe: choose jacket, rose, special event; verify all illustrations use the selected colour and only jacket is selected. Click Discuss → expected idea in the booking panel, name field focused and visible below sticky header. Repeat with skirt/sage and ensure the idea replaces the previous one. Validate form failure, local success and reset.
+## Проверка изменений
 
-Colour game: initial mismatch → Compare gives score and directions. Adjust each slider; the own sample changes while target stays fixed. Targets:
+Фактически проверено в локальном браузере: точное совпадение100%, изменение сбрасывает оценку, повтор и быстрые действия, неверные имя/телефон, успешный обратный звонок, очистка полей и повтор, мобильное меню с Escape и якорь контактов. Проверены ширины320/390/768/1280 и отсутствие горизонтальной прокрутки. Сцена просмотрена до сборки, со швами и при обратной прокрутке. Синтаксис JS проверен bundledNode.
 
-1. Ultramarine: hue227, saturation58, lightness48.
-2. Dusty rose: hue351, saturation28, lightness61.
-3. Sage: hue105, saturation12, lightness65.
+Reduced motion проверяется по веткам CSS/GSAP; принудительное переключение системной настройки через браузерный инструмент недоступно. Физическое iOS-устройство и реальное касание не тестировались.
 
-90% or more completes a round. For a deterministic accessible path, activate Hint up to three times, then Compare. Pass all rounds, verify final result and restart. Buttons01–03 freely switch samples, retaining each sample’s slider values and solved score in session memory. Completion requires all three distinct samples, in any order. Next opens the next unsolved sample, wrapping after03; Restart clears every attempt. Repeated Compare cannot duplicate a solved sample. The accuracy is a game metric, not a colour-calibration instrument; display differences are disclosed.
+## Перед десятью копиями
 
-Arrow SVGs point northeast at rest and right on hover/focus, without scroll rotation. Text selection changes only letter colour. Finite pointer loops stop on settling, hidden page and offscreen sections.
-
-## Brand copy and contact provenance
-
-User requested a fresh business copy of the current atelier concept. The source-guided references and all repaired interactions above are preserved. The large wordmark is now ЛЕПАТА and the favicon is a Cyrillic Л. This demo identity is not claimed as the official logo.
-
-Company: Лепата — бренд-ателье. Original source list index 323 / spreadsheet row 325. Public sources checked on 26 October 2026:
-
-- https://2gis.ru/moscow/firm/70000001092883218 — current business name, brand-atelier category, Волоколамское шоссе, 24 к2, Telegram channel and direct phone chat.
-- https://2gis.ru/moscow/firm/70000001092883218/tab/info — tailoring and clothing-repair categories. Specific bespoke services are not asserted as confirmed; copy invites discussing the garment with the atelier.
-- https://urbanplaces.su/ru_moskva/moskva/metro-streshnevo?page=2 — matching name, address and phone.
-- https://t.me/%2B79261993843 — public direct-chat page confirms the matching phone.
-
-Phone: +7 926 199-38-43. Accent Telegram action: https://t.me/+79261993843. Public channel: https://t.me/lepata_msk. Email not found in checked sources; no mailto or invented address. Own domain and clients.site not found by name/address/phone/handle search; this is a bounded finding, not a guarantee.
-
-No hours, prices, testimonials, owner details or unverified guarantees were added. The photo is a retained concept illustration, not a claim about actual portfolio. Demo forms remain local-only and clear input on success. All animation/gameplay JS is byte-identical to the current repaired source atelier, including 01–03 sample switching and per-round memory.
-
-Additional copy QA: check 320/390px sticky header, visible Contacts, new phone/Telegram/route and source dialog. Full browser QA and publication are coordinated by the parent task.
+Применить дальнейшие правки и выбор отдельного интерактива; затем копировать утверждённую версию. Каждая копия требует замены бренда, title/meta, favicon, контактов, адреса, карт и источников. Письма сохраняют единый текст с заменой адресата, бренда и проверенной ссылки на демо. Тиражирование пока не запускалось.

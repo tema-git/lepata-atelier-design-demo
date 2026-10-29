@@ -1,184 +1,183 @@
 (() => {
   'use strict';
-  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  function refreshScroll() { if(window.ScrollTrigger) ScrollTrigger.refresh(); }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const refresh = () => window.ScrollTrigger?.refresh();
+  const header = document.querySelector('.header');
+  const setHeaderHeight = () => document.documentElement.style.setProperty('--header-height', `${Math.ceil(header.getBoundingClientRect().height)}px`);
+  setHeaderHeight();
+  if (window.ResizeObserver) new ResizeObserver(setHeaderHeight).observe(header);
+  else window.addEventListener('resize', setHeaderHeight, {passive: true});
 
-  const appointmentForm = document.querySelector('#appointment-form');
-  const appointmentName = appointmentForm.elements.name;
-  const appointmentPhone = appointmentForm.elements.phone;
-  const appointmentSuccess = document.querySelector('#appointment-success');
-  function validateAppointmentName() {
-    appointmentName.setCustomValidity(appointmentName.value.trim().length < 2 ? 'Введите имя: не менее двух символов.' : '');
-  }
-  function validateAppointmentPhone() {
-    const value = appointmentPhone.value.trim();
+  // All personal fields remain in the page's temporary form state only.
+  const form = document.querySelector('#appointment-form');
+  const name = form.elements.name;
+  const phone = form.elements.phone;
+  const success = document.querySelector('#appointment-success');
+  form.noValidate = true;
+  const validateName = () => name.setCustomValidity(name.value.trim().length >= 2 ? '' : 'Введите имя: не менее двух символов.');
+  const validatePhone = () => {
+    const value = phone.value.trim();
     const digits = value.replace(/\D/g, '');
     const valid = /^\+?[\d\s()\-]+$/.test(value) && digits.length >= 10 && digits.length <= 15 && !/^(\d)\1+$/.test(digits);
-    appointmentPhone.setCustomValidity(valid ? '' : 'Введите корректный телефон: от 10 до 15 цифр, можно с +, пробелами и скобками.');
-  }
-  appointmentName.addEventListener('input', validateAppointmentName);
-  appointmentPhone.addEventListener('input', validateAppointmentPhone);
-  appointmentForm.addEventListener('submit', event => {
+    phone.setCustomValidity(valid ? '' : 'Введите корректный телефон: от 10 до 15 цифр, можно с +, пробелами и скобками.');
+  };
+  name.addEventListener('input', validateName);
+  phone.addEventListener('input', validatePhone);
+  form.addEventListener('submit', event => {
     event.preventDefault();
-    validateAppointmentName(); validateAppointmentPhone();
-    if(!appointmentForm.reportValidity()) return;
-    const callback = appointmentForm.elements.request.value === 'callback';
-    document.querySelector('#appointment-success-copy').textContent = callback ? 'Вы выбрали обратный звонок. Демозаявка никуда не отправлена.' : 'Вы выбрали запись в ателье. Демозаявка никуда не отправлена.';
-    appointmentForm.reset(); appointmentName.setCustomValidity(''); appointmentPhone.setCustomValidity('');
-    appointmentForm.hidden = true;
-    appointmentSuccess.hidden = false;
-    appointmentSuccess.focus({preventScroll: true});
-    appointmentSuccess.scrollIntoView({block:'nearest',behavior:'instant'});
-    refreshScroll();
+    validateName(); validatePhone();
+    if (!form.reportValidity()) return;
+    const callback = form.elements.request.value === 'callback';
+    document.querySelector('#appointment-success-copy').textContent = callback
+      ? 'Вы выбрали обратный звонок. Это демонстрация: заявка никуда не отправлена.'
+      : 'Вы выбрали запись в ателье. Это демонстрация: реальная запись не создана.';
+    form.reset(); name.setCustomValidity(''); phone.setCustomValidity('');
+    form.hidden = true; success.hidden = false;
+    success.focus({preventScroll: true});
+    success.scrollIntoView({block: 'nearest', behavior: 'instant'});
+    refresh();
   });
-  appointmentForm.querySelector('[type="submit"]').disabled = false;
+  form.querySelector('[type="submit"]').disabled = false;
   document.querySelector('#appointment-reset').addEventListener('click', () => {
-    appointmentSuccess.hidden = true;
-    appointmentForm.hidden = false;
-    appointmentForm.reset();
-    appointmentName.setCustomValidity(''); appointmentPhone.setCustomValidity('');
-    appointmentName.focus();
-    refreshScroll();
+    success.hidden = true; form.hidden = false; form.reset();
+    name.setCustomValidity(''); phone.setCustomValidity('');
+    name.focus({preventScroll: true});
+    name.scrollIntoView({block: 'nearest', behavior: 'instant'});
+    refresh();
   });
 
-  const menuButton=document.querySelector('.menu-toggle'),nav=document.querySelector('#navigation');
-  function closeMenu(){nav.classList.remove('is-open');menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Открыть меню');}
-  menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')!=='true';nav.classList.toggle('is-open',open);menuButton.setAttribute('aria-expanded',String(open));menuButton.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');if(open)nav.querySelector('a').focus();});
-  nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));
-  document.querySelector('.header-contact').addEventListener('click',closeMenu);
-  document.addEventListener('keydown',event=>{if(event.key==='Escape' && nav.classList.contains('is-open')){closeMenu();menuButton.focus();}});
-  document.querySelectorAll('[data-demo]').forEach(button=>button.addEventListener('click',()=>document.querySelector('#demo-dialog').showModal()));
-  document.querySelectorAll('dialog').forEach(dialog=>{dialog.querySelector('[data-close]').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',event=>{if(event.target===dialog){const rect=dialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dialog.close();}});});
-  function setupPointerMotion() {
-  const pointerMedia = matchMedia('(hover: hover) and (pointer: fine)');
-  function reactToPointer(surface, decoration, render) {
-    let x = 0, y = 0, targetX = 0, targetY = 0, frame = 0, lastTime = 0;
-    let bounds = null, visible = false;
-    function allowed() { return pointerMedia.matches && !reducedMotion.matches && !document.hidden; }
-    function settleImmediately() {
-      if(frame) cancelAnimationFrame(frame);
-      frame = 0; lastTime = 0; x = y = targetX = targetY = 0;
-      decoration.classList.remove('is-moving');
-      surface.classList.remove('has-pointer');
-      surface.style.setProperty('--pointer-x', '50%');
-      surface.style.setProperty('--pointer-y', '50%');
-      decoration.classList.toggle('is-reactive', allowed());
-      render(0, 0, allowed());
+  const toggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('#navigation');
+  const closeMenu = () => {
+    nav.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Открыть меню');
+  };
+  toggle.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') !== 'true';
+    nav.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    if (open) nav.querySelector('a').focus();
+  });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+  document.querySelector('.header-contact').addEventListener('click', closeMenu);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+      closeMenu(); toggle.focus();
     }
-    function tick(time) {
-      frame = 0;
-      if(!allowed() || !visible) { settleImmediately(); return; }
-      const step = lastTime ? Math.min((time - lastTime) / 16.67, 3) : 1;
-      lastTime = time;
-      const blend = 1 - Math.pow(.82, step);
-      x += (targetX - x) * blend; y += (targetY - y) * blend;
-      surface.style.setProperty('--pointer-x', `${(x + 1) * 50}%`);
-      surface.style.setProperty('--pointer-y', `${(y + 1) * 50}%`);
-      render(x, y, true);
-      if(Math.abs(targetX - x) + Math.abs(targetY - y) > .002) {
-        frame = requestAnimationFrame(tick);
-      } else {
-        x = targetX; y = targetY; render(x, y, true);
-        decoration.classList.remove('is-moving'); lastTime = 0;
-      }
+  });
+  matchMedia('(min-width: 961px)').addEventListener('change', closeMenu);
+
+  const dialog = document.querySelector('#demo-dialog');
+  document.querySelectorAll('[data-demo]').forEach(button => button.addEventListener('click', () => dialog.showModal()));
+  dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {
+    if (event.target !== dialog) return;
+    const rect = dialog.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+  });
+
+  // A single finite animation loop moves decorative layers, never the controls.
+  const surfaces = [...document.querySelectorAll('[data-pointer-surface], .hero-game, .atelier-motion, .contact, .footer')];
+  const states = surfaces.map(el => ({el, x: 0, y: 0, tx: 0, ty: 0, visible: false, rect: null}));
+  const stateByElement = new Map(states.map(state => [state.el, state]));
+  let frame = 0, lastTime = 0;
+  const allowed = () => finePointer.matches && !reduce.matches && !document.hidden;
+  const approachThread = document.querySelector('.approach-thread path');
+  const contactThread = document.querySelector('.contact-thread path');
+  const contactNeedle = document.querySelector('.contact-thread circle');
+  function paint(state) {
+    const {el, x, y} = state;
+    el.style.setProperty('--pointer-x', `${(x + 1) * 50}%`);
+    el.style.setProperty('--pointer-y', `${(y + 1) * 50}%`);
+    el.style.setProperty('--shift-x', `${(x * 10).toFixed(2)}px`);
+    el.style.setProperty('--shift-y', `${(y * 8).toFixed(2)}px`);
+    el.style.setProperty('--tilt', `${(x * 2).toFixed(2)}deg`);
+    if (el.id === 'hero-color-game') {
+      el.style.setProperty('--hg-pointer-x', `${(x * 7).toFixed(2)}px`);
+      el.style.setProperty('--hg-pointer-y', `${(y * 5).toFixed(2)}px`);
     }
-    function schedule() {
-      if(!frame && allowed() && visible) {
-        decoration.classList.add('is-moving');
-        frame = requestAnimationFrame(tick);
-      }
+    if (el.id === 'approach' && approachThread) {
+      approachThread.setAttribute('d', `M0 62 C${180 + x * 85} ${62 + y * 20} ${190 + x * 65} ${10 - y * 14} ${350 + x * 40} ${20 + y * 14} S${540 - x * 80} ${90 - y * 20} 700 42 S925 8 1100 30`);
     }
-    function move(event) {
-      if(!allowed() || !visible || event.pointerType === 'touch') return;
-      if(!bounds) bounds = surface.getBoundingClientRect();
-      targetX = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
-      targetY = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
+    if (el.id === 'contact' && contactThread) {
+      const cx = 230 + x * 85, cy = 65 + y * 32;
+      contactThread.setAttribute('d', `M0 120 C100 120 ${125 + x * 70} ${15 - y * 25} ${cx} ${cy} S${360 - x * 70} ${160 - y * 30} 500 35`);
+      contactNeedle.setAttribute('cx', cx); contactNeedle.setAttribute('cy', cy);
+    }
+  }
+  function tick(time) {
+    frame = 0;
+    if (!allowed()) { reset(); return; }
+    const delta = lastTime ? Math.min((time - lastTime) / 16.67, 3) : 1;
+    lastTime = time;
+    const blend = 1 - Math.pow(.80, delta);
+    let unsettled = false;
+    states.forEach(state => {
+      if (!state.visible) return;
+      state.x += (state.tx - state.x) * blend;
+      state.y += (state.ty - state.y) * blend;
+      if (Math.abs(state.tx - state.x) + Math.abs(state.ty - state.y) > .002) unsettled = true;
+      else { state.x = state.tx; state.y = state.ty; }
+      paint(state);
+    });
+    if (unsettled) frame = requestAnimationFrame(tick);
+    else lastTime = 0;
+  }
+  function schedule() { if (!frame && allowed()) frame = requestAnimationFrame(tick); }
+  function reset() {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0; lastTime = 0;
+    states.forEach(state => {
+      state.x = state.y = state.tx = state.ty = 0;
+      state.el.classList.remove('has-pointer');
+      paint(state);
+    });
+  }
+  const observer = window.IntersectionObserver ? new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const state = stateByElement.get(entry.target);
+      state.visible = entry.isIntersecting;
+      if (!state.visible) { state.x = state.y = state.tx = state.ty = 0; state.el.classList.remove('has-pointer'); paint(state); }
+    });
+  }, {rootMargin: '60px'}) : null;
+  states.forEach(state => {
+    if (observer) observer.observe(state.el); else state.visible = true;
+    const move = event => {
+      if (!allowed() || !state.visible || event.pointerType === 'touch') return;
+      state.rect ||= state.el.getBoundingClientRect();
+      state.tx = Math.max(-1, Math.min(1, (event.clientX - state.rect.left) / state.rect.width * 2 - 1));
+      state.ty = Math.max(-1, Math.min(1, (event.clientY - state.rect.top) / state.rect.height * 2 - 1));
       schedule();
-    }
-    surface.addEventListener('pointerenter', event => { surface.classList.toggle('has-pointer', allowed()); bounds = surface.getBoundingClientRect(); move(event); });
-    surface.addEventListener('pointermove', move, {passive:true});
-    surface.addEventListener('pointerleave', () => { surface.classList.remove('has-pointer'); targetX = targetY = 0; schedule(); });
-    surface.addEventListener('pointercancel', settleImmediately);
-    window.addEventListener('scroll', () => { bounds = null; }, {passive:true});
-    window.addEventListener('resize', () => { bounds = null; settleImmediately(); }, {passive:true});
-    window.addEventListener('blur', settleImmediately);
-    window.addEventListener('pagehide', settleImmediately);
-    document.addEventListener('visibilitychange', settleImmediately);
-    reducedMotion.addEventListener('change', settleImmediately);
-    pointerMedia.addEventListener('change', settleImmediately);
-    const observer = new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting;
-      if(!visible) settleImmediately();
-    });
-    observer.observe(surface);
-    settleImmediately();
-  }
-  const hero = document.querySelector('.hero');
-  const photo = hero.querySelector('.fabric-frame img');
-  const labelMark = hero.querySelector('.hero-label svg');
-  reactToPointer(hero, hero, (x, y, enabled) => {
-    photo.style.transform = enabled ? `translate(${x * 12}px, ${y * 10}px) scale(1.14) rotate(${x * .6}deg)` : '';
-    labelMark.style.transform = enabled ? `rotate(${x * 15}deg) translateY(${y * 8}px)` : '';
+    };
+    state.el.addEventListener('pointerenter', event => { state.rect = state.el.getBoundingClientRect(); if (allowed()) state.el.classList.add('has-pointer'); move(event); });
+    state.el.addEventListener('pointermove', move, {passive: true});
+    state.el.addEventListener('pointerleave', () => { state.el.classList.remove('has-pointer'); state.tx = state.ty = 0; schedule(); });
+    state.el.addEventListener('pointercancel', reset);
   });
-  const approach = document.querySelector('#approach');
-  const approachThread = approach.querySelector('.approach-thread path');
-  reactToPointer(approach, approach, (x, y) => {
-    approachThread.setAttribute('d', `M0 130 C${180 + x * 75} ${130 + y * 45} ${195 + x * 90} ${25 - y * 36} ${350 + x * 70} ${38 + y * 36} S${550 - x * 70} ${168 - y * 32} ${680 + x * 35} ${80 + y * 20} S820 38 900 60`);
-  });
-  document.querySelectorAll('.principle-grid article').forEach(article => {
-    const art = article.querySelector('.principle-art');
-    reactToPointer(article, article, (x, y, enabled) => {
-      art.style.translate = enabled ? `${x * 17}px ${y * 13}px` : '';
-      art.style.rotate = enabled ? `${x * 12}deg` : '';
-    });
-  });
-  const wardrobe = document.querySelector('#sketch');
-  reactToPointer(wardrobe, wardrobe, () => {});
-  document.querySelectorAll('.look-choice').forEach(card => {
-    const illustration = card.querySelector('svg');
-    reactToPointer(card, card, (x, y, enabled) => {
-      illustration.style.transform = enabled ? `translate(${x * 8}px, ${y * 6}px) rotate(${x * 1.7}deg)` : '';
-    });
-  });
-  const colorStudio = document.querySelector('#line-game');
-  reactToPointer(colorStudio, colorStudio, (x, y, enabled) => {
-    colorStudio.style.setProperty('--fold-shift', enabled ? `${x * 8}px` : '0px');
-  });
-  const contact = document.querySelector('#contact');
-  const contactThread = contact.querySelector('.contact-thread path');
-  const contactNeedle = contact.querySelector('.contact-thread circle');
-  reactToPointer(contact, contact, (x, y) => {
-    const cx = 230 + x * 85, cy = 65 + y * 40;
-    contactThread.setAttribute('d', `M0 120 C${100 + x * 30} 120 ${125 + x * 70} ${15 - y * 25} ${cx} ${cy} S${360 - x * 70} ${160 - y * 30} 500 35`);
-    contactNeedle.setAttribute('cx', cx);
-    contactNeedle.setAttribute('cy', cy);
-  });
-  const footer = document.querySelector('.footer');
-  const footerThread = footer.querySelector('.footer-thread');
-  reactToPointer(footer, footer, (x, y, enabled) => {
-    footerThread.style.transform = enabled ? `translateX(${x * 60}px) rotate(${x * 3}deg) scaleX(${1 + Math.abs(y) * .2})` : '';
-  });
+  window.addEventListener('scroll', () => states.forEach(state => { state.rect = null; }), {passive: true});
+  window.addEventListener('resize', () => { states.forEach(state => { state.rect = null; }); reset(); }, {passive: true});
+  window.addEventListener('blur', reset);
+  window.addEventListener('pagehide', reset);
+  document.addEventListener('visibilitychange', reset);
+  reduce.addEventListener('change', reset); finePointer.addEventListener('change', reset);
+  reset();
 
-  }
-  if (window.IntersectionObserver) setupPointerMotion();
-  if(window.gsap && window.ScrollTrigger) {
+  if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
-    const scrollMotion = gsap.matchMedia();
-    scrollMotion.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.to('.measure-line span', {
-        scaleY: .72, transformOrigin: 'center', ease: 'none',
-        scrollTrigger: {trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true}
-      });
+    const media = gsap.matchMedia();
+    media.add('(prefers-reduced-motion: no-preference)', () => {
       const thread = document.querySelector('.approach-thread path');
-      if(thread) {
-        const length = thread.getTotalLength();
-        gsap.fromTo(thread, {strokeDasharray: length, strokeDashoffset: length}, {
-          strokeDashoffset: 0, ease: 'none',
-          scrollTrigger: {trigger: '#approach', start: 'top 80%', end: 'center 35%', scrub: true}
-        });
-      }
+      const length = thread.getTotalLength();
+      gsap.fromTo(thread, {strokeDasharray: length, strokeDashoffset: length}, {
+        strokeDashoffset: 0, ease: 'none',
+        scrollTrigger: {trigger: '#approach', start: 'top 85%', end: 'center 45%', scrub: .35}
+      });
+      gsap.to('.hero-thread', {scaleX: .55, ease: 'none', scrollTrigger: {trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true}});
     });
-    if(document.fonts) document.fonts.ready.then(refreshScroll);
-    window.addEventListener('load', refreshScroll, {once:true});
+    if (document.fonts) document.fonts.ready.then(refresh);
+    window.addEventListener('load', refresh, {once: true});
   }
 })();
