@@ -95,7 +95,6 @@
 
   if (dragHandle) {
     dragHandle.setAttribute('aria-orientation', 'horizontal');
-    dragHandle.setAttribute('aria-describedby', 'uc-compare-hint');
     dragHandle.addEventListener('pointerdown', event => {
       if (event.isPrimary === false || event.button !== 0 || drag) return;
       const bounds = compare.getBoundingClientRect();
@@ -141,13 +140,6 @@
   root.querySelector('#uc-discuss').addEventListener('click', () => {
     const selected = garments[garment], route = selected.routes[routeIndex];
     document.dispatchEvent(new CustomEvent('atelier:idea', {detail: `${selected.name}: ${route.label.toLowerCase()}. Идея — «${route.title}».`}));
-  });
-  root.querySelector('#uc-reset').addEventListener('click', () => {
-    updateInPlace(() => {
-      garment = 'shirt'; routeIndex = 0; render();
-      document.dispatchEvent(new CustomEvent('atelier:clear-idea'));
-      radios[0].focus({preventScroll: true});
-    });
   });
   render();
 })();
