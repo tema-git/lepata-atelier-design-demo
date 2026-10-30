@@ -132,7 +132,15 @@ legend,.field-label{display:block;font-size:16px;font-weight:500;line-height:1.5
 [data-pointer-surface]{--pointer-x:50%;--pointer-y:50%;--shift-x:0px;--shift-y:0px;--tilt:0deg}
 .motion-parallax{transform:translate(var(--shift-x,0px),var(--shift-y,0px)) rotate(var(--tilt,0deg))}
 .hero{isolation:isolate}
-@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.hg-stage,.am-art,.uc-compare{cursor:url('assets/needle-cursor.svg') 4 31,default}.uc-compare button{cursor:ew-resize}.uc-label{cursor:default}}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  /* Keep one continuous needle zone across illustrations and their surrounding space. */
+  .hero,.approach,.second-life,.atelier-motion{cursor:url('assets/needle-cursor.svg') 4 31,default}
+  :where(.hero,.approach,.second-life,.atelier-motion) :is(h1,h2,h3,h4,p,output,figcaption,legend,label,.uc-figcaptions,.uc-label,.am-scene-label,.am-stage-caption,.am-step-number){cursor:text}
+  :where(.hero,.approach,.second-life,.atelier-motion) :is(a[href],button,[role=button],input[type=range],input[type=radio],input[type=checkbox],select),.uc-garment-options label,.uc-garment-options label *{cursor:pointer}
+  :where(.hero,.approach,.second-life,.atelier-motion) :is(input[type=text],input[type=tel],input[type=email],input[type=search],input[type=number],textarea,[contenteditable=true]){cursor:text}
+  :where(.hero,.approach,.second-life,.atelier-motion) :is(button:disabled,input:disabled,select:disabled,textarea:disabled){cursor:not-allowed}
+  .second-life .uc-drag-handle,.second-life .uc-drag-handle *{cursor:ew-resize}
+}
 @media(prefers-reduced-motion:reduce){.contact-magnet-surface{transform:none!important}.hero::before{display:none}}
 @media(max-width:1160px){.header{gap:24px;min-height:96px}.header nav{gap:20px}.header .brand-descriptor{display:none}.wordmark .brand-name{font-size:43px}.hero{gap:30px}.approach-main{gap:35px}.principle-grid{gap:24px}.principle-grid article{grid-template-columns:1fr;gap:12px}.principle-art{height:50px}.footer .brand-descriptor{display:none}}
 @media(max-width:960px){.header{gap:18px}.header nav{display:none;position:absolute;top:100%;left:-30px;right:-30px;padding:18px 30px 25px;background:var(--paper);border-bottom:1px solid var(--rule);max-height:calc(100dvh - var(--header-height));overflow:auto}.header nav.is-open{display:flex;align-items:stretch;flex-direction:column;gap:6px}.header nav a{font-size:18px;padding:14px 0}.header-contact{margin-left:auto}.menu-toggle{display:flex;position:relative;align-items:center;justify-content:center;width:46px;height:46px;padding:0;border:1px solid var(--rule);background:transparent;flex-shrink:0}.menu-toggle span{position:absolute;width:20px;height:1px;background:var(--ink);transform:translateY(-4px);transition:transform .2s}.menu-toggle span+span{transform:translateY(4px)}.menu-toggle[aria-expanded=true] span{transform:rotate(45deg)}.menu-toggle[aria-expanded=true] span+span{transform:rotate(-45deg)}.hero h1{font-size:clamp(80px,10.5vw,108px)}.contact{gap:40px}.request-types{grid-template-columns:1fr}}

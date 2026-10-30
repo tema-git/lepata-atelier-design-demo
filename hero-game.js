@@ -56,7 +56,8 @@
   }
   function accuracy() {
     const difference = distance(target, values());
-    return Math.max(0, Math.min(100, Math.round(100 * Math.exp(-difference / 45))));
+    // A gentle curve rewards near matches without giving unrelated colours a high score.
+    return Math.round(100 / (1 + Math.pow(difference / 45, 2)));
   }
 
   function setArt(svg, garment, suffix) {
